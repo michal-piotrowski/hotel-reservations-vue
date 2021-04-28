@@ -1,25 +1,45 @@
 <template>
   <nav class="navbar navbar-light hr-dark-themed">
     <div class="navbar-brand">
-      <a class="nav-item" href="#"><img id="nav-logo-img" src="@/assets/HRLogo.png" alt="HRLOGO"/></a>
+      <router-link class="nav-item" to="/"><img src="@/assets/HRLogo.png" alt=""></router-link>
     </div>
     <div class="navbar navbar-toggler">
-      <a class="nav-item" href="#"><img src="@/assets/Sign_in.png" class="nav-img" alt="SIGN IN"/></a>
-      <a class="nav-item" href="#"><img src="@/assets/information.png"  class="nav-img" alt="INFO"/></a>
-      <a class="nav-item" href="#"><img src="@/assets/Map.png" class="nav-img"  alt="MAP"/></a>
+      <router-link class="nav-item" to="/login"><img src="@/assets/Sign_in.png"  alt=""></router-link>
+      <router-link class="nav-item" to="/tos"><img src="@/assets/information.png"  alt=""></router-link>
+      <router-link class="nav-item" to="/results"><img src="@/assets/Map.png"  alt=""></router-link>
     </div>
   </nav>
 </template>
 
 <script>
+import { defineComponent } from "vue";
 
-export default {
-  
-}
+export default defineComponent({
+  components: {
+    
+  }
+})
 </script>
-<style lang="scss" scoped>
-@import 'bootstrap/scss/bootstrap.scss';
+<style lang="scss">
+@import '~bootstrap/scss/bootstrap';
 
-@import './Navbar.scss';
+nav {
+  padding: 15px;  
+}
 
+img {
+  margin: 0px 1vw 0px 1vw;
+}
+
+.navbar img {
+  width: 40px;
+}
+
+.navbar img[src="/assets/HRLogo.png"] {
+  width:47px;
+}
+
+.navbar-light .navbar-toggler {
+  border: 0;
+}
 </style>  
