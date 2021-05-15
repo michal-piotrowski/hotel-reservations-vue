@@ -30,11 +30,19 @@
 </div>
 </template>
 
-<script lang="ts">
+<script>
 import Vue, { defineComponent } from 'vue';
+import {mapGetters} from 'vuex';
 
 export default defineComponent({
+  mounted() {
 
+  },
+  computed: {
+    ...mapGetters({
+      
+    })
+  }
 })
 </script>
 

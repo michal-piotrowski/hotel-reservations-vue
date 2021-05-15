@@ -3,7 +3,7 @@
     <div id="search-input-wrapper">
       <img id="search-icon" src="@/assets/map/magnif_glas.png" />
       <label class="search-input-label" for="search-input">{{ $filters.translate("Searched:")}}</label>
-      <input type="text" id="search-input" />
+      <input v-model="searchText" type="text" id="search-input" />
     </div>
     <div id="date-pickers-wrapper">
       <div id="date-from-wrapper">
@@ -11,27 +11,32 @@
         <label class="search-input-label" for="search-input">{{ $filters.translate("Check-out")
         }}</label>
         <i id="chev-date-from-left" class="fa fa-chevron-left"></i>
-        <input placeholder="dd-mm-yyyy" type="text" class="date-input" />
+        <input v-model="dateFrom" placeholder="dd-mm-yyyy" type="text" class="date-input" />
         <i id="chev-date-from-right" class="fa fa-chevron-right"></i>
       </div>
       <div id="date-to-wrapper">
         <img id="search-icon" src="@/assets/date_range_24px_outlined.png" />
-        <label class="search-input-label" for="search-input">{{$filters.translate("Arrival")}}</label>
+        <label class="search-input-label" for="search-input">{{ $filters.translate("Arrival")}}</label>
         <i id="chev-date-to-left" class="fa fa-chevron-left"></i>
-        <input placeholder="dd-mm-yyyy" type="text" class="date-input" />
+        <input v-model="dateTo" placeholder="dd-mm-yyyy" type="text" class="date-input" />
         <i id="chev-date-to-right" class="fa fa-chevron-right"></i>
       </div>
     </div>
   </div>
 </template>
 
-<script lang="ts">
+<script>
 import {defineComponent} from "vue";
 
 
 export default defineComponent({
   created() {
     console.log(this);
+  },
+  data() {
+    searchText,
+    dateFrom, 
+    dateTo
   }
 });
 </script>

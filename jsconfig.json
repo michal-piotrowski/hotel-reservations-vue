@@ -4,7 +4,6 @@
     "module": "esnext",
     "strict": true,
     "jsx": "preserve",
-    "importHelpers": true,
     "moduleResolution": "node",
     "experimentalDecorators": true,
     "skipLibCheck": true,
@@ -33,7 +32,7 @@
     "src/**/*.vue",
     "tests/**/*.ts",
     "tests/**/*.tsx"
-  ],
+    , "src/main.js", "src/router/index.js", "src/store/store.ts", "src/http/HrAxios.js", "src/helpers/HrTool.js"  ],
   "exclude": [
     "node_modules"
   ]

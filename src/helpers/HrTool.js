@@ -1,5 +1,5 @@
 export default {
-  translate(text: String) {
+  translate(text) {
     return text;
   }
 }

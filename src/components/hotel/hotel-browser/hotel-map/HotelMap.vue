@@ -1,17 +1,16 @@
 <template>
 <div class="component-wrapper">
-  <router-outlet></router-outlet>
   <div class="component-container container">
-    <HotelSearch></HotelSearch>
+    <HotelSearch ref="hotel-search"></HotelSearch>
     <div id="leaflet-wrapper">
       <div id="leaflet-map"></div>
     </div>
-    <HotelList></HotelList>
+    <HotelList ref="hotel-list"></HotelList>
   </div>
 </div>
 </template>
 
-<script lang="ts">
+<script>
 import Vue, { defineComponent } from 'vue';
 import HotelList from '../hotel-list/HotelList.vue';
 import HotelSearch from '../hotel-search/HotelSearch.vue';
@@ -22,16 +21,27 @@ export default defineComponent({
     HotelSearch,
     HotelList
   },
+  data() {
+    return {
+      map: null,
+    }
+  },
   mounted() {
-    let map = L.map('leaflet-map').setView([51.505, -0.09], 13);
 
+    //fill the searched line, date-from & date-to with the query from Slider.vue
+    this.map = L.map('leaflet-map').setView([51.505, -0.09], 13);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     }).addTo(map);
-
-    L.marker([51.5, -0.09]).addTo(map)
-        .bindPopup('A pretty CSS3 popup.<br> Easily customizable.')
-        .openPopup();
+    // mark the found points on the map
+  },
+  created() {
+        //start spinning the spinner IF THE STORE IS COMMITTING THE FETCH_SUGGESTIONS mutation
+  },
+  methods: {
+    setView() {
+      
+    }
   }
 })
 </script>

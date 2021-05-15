@@ -20,9 +20,10 @@
 </div>
 </template>
 
-<script lang="ts">
+<script>
 import Navbar from './components/shared/navbar/Navbar.vue';
 import {defineComponent} from 'vue';
+import HrAxios from './http/HrAxios';
 
 export default defineComponent({
   components: { Navbar },
@@ -45,14 +46,14 @@ export default defineComponent({
 #formMiddle { 
   height:38vw
 }
-
+//
 #landing-where { 
   background-color:white;
   margin-top:1rem;
   height:2.4rem;
   box-shadow: 0 0 10px;
   opacity:0.93;
-
+z-index: 3;
 }
 #landing-where-image {width: 1.3em;
    height: 1.3em;

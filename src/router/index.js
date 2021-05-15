@@ -6,13 +6,22 @@ import Login from '../components/profile/Login.vue';
 import Profile from '../components/profile/Profile.vue';
 import Tos from '../components/tos/Tos.vue';
 
-const routes: Array<RouteRecordRaw> = [
-  { path: '/', component: Slider},
-  { path: '/results/:id', component: Booking},
-  { path: '/results', component: HotelMap},
-  { path: '/login', component: Login},
-  { path: '/profile', component: Profile},
-  { path: '/tos', component: Tos },
+export const names = {
+  ROOT: 'root',
+  RESULTS_ID: 'results_id',
+  RESULTS:'results',
+  LOGIN:'login',
+  PROFILE:'profile',
+  TOS:'tos',
+}
+
+const routes = [
+  { name: names.ROOT,  path: '/', component: Slider},
+  { name: names.RESULTS_ID,  path: '/results/:id', component: Booking},
+  { name: names.RESULTS,  path: '/results', component: HotelMap},
+  { name: names.LOGIN,  path: '/login', component: Login},
+  { name: names.PROFILE,  path: '/profile', component: Profile},
+  { name: names.TOS,  path: '/tos', component: Tos },
   { path: '/**', component: Slider},
 ]
 
@@ -21,4 +30,6 @@ const router = createRouter({
   routes
 })
 
-export default router
+export default router;
+
+

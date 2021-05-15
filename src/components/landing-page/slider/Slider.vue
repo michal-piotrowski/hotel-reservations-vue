@@ -11,37 +11,93 @@
         </div>
         <div class="row" id="landing-where">
           <img id="landing-where-image" src="@/assets/locationIcoFilled_purp.png"/>
-          <input id="landing-where-input" type="text" placeholder="Your searched location" />
+          <Suggestions 
+            ref="search-suggestions"
+            @location-selected="handleLocationSelected"
+            @input="queryMatching($event.target.value)"
+            :containerStyle="{width: 'calc(100% - 2.8em)'}"
+            :placeholder="'Your searched location'"/>
         </div>
         <div class="row">
           <div id="landing-from-wrapper" class="col-sm-6">
             <div id="landing-from" >
-              <img id="landing-date-from" src="@/assets/date_range_24px_outlined.png"/>
-              <input id="landing-date-from-input" class="form-control" type="text" placeholder="Date from" />
+              <input @input="handleDateFromSelected" id="landing-date-from-input" ref="date-from" class="form-control" type="date" placeholder="Date from" />
             </div>
           </div>
           <div id="landing-to-wrapper" class="col-sm-6">
             <div id="landing-to" >
-              <img id="landing-date-to" src="@/assets/date_range_24px_outlined.png" />
-              <input id="landing-date-to-input" class="form-control" type="text" placeholder="Date to"/>
+              <input @input="handleDateToSelected" id="landing-date-to-input" ref="date-to" class="form-control" type="date" placeholder="Date to"/>
             </div>
           </div>
         </div>
         <div class="row justify-content-center" id="search-wrapper">
-          <button id="search-button" class="btn btn-primary">Search</button>
+          <button @click="searchHotels" :disabled="shouldDisableSearch" id="search-button" class="btn btn-primary">Search</button>
         </div>
       </div>
     </div>   
     <div class="col-md-4 midpageComponent" id="sloganRight">Search locations around the globe using combined data from major hotel searches</div>
-    </div> 
+  </div> 
 </template>
 
-<script lang="ts">
-  import {defineComponent} from 'vue';
+<script>
+import {defineComponent} from 'vue';
+import { names as storeNames } from '@/store/store.js';
+import { debounce } from 'lodash';
+import {  mapGetters } from 'vuex';
+import HrAxios, { URL } from '../../../http/HrAxios';
+import Suggestions from '../../../inputs/inputWithSuggestions/Suggestions.vue';
+import {eventNames} from '@/store/eventNames.js';
+import { names as routerNames } from '@/router';
 
-  export default defineComponent({
-    
-  })
+
+export default defineComponent({
+  components: { Suggestions },
+  mounted() {
+  },
+  data() {
+    return {
+      eventNames,
+      searchValue: null
+    }
+  },
+  methods: {
+    handleDateToSelected(event) {
+      this.$store.dispatch(storeNames.actions.MERGE_LOCATION_FORM_VALUE, {value: event.target.value, fieldName: 'dateTo'} )
+    },
+    handleDateFromSelected(event) {
+      this.$store.dispatch(storeNames.actions.MERGE_LOCATION_FORM_VALUE, {value: event.target.value, fieldName: 'dateFrom'} )
+    },
+    handleLocationSelected(suggestion) {
+      this.$store.dispatch(storeNames.actions.MERGE_LOCATION_FORM_VALUE, {value: suggestion, fieldName: 'suggestion'});
+      this.clearCollection();
+    },
+    clearCollection() {
+      this.$refs['search-suggestions'].collection = null;
+    },  
+    searchHotels() {
+      this.$router.push(routerNames.RESULTS);
+      this.$store.dispatch(storeNames.actions.SEARCH_DESTINATIONS);
+    },
+    debouncedQueryMatch: debounce(function (value, vm) {
+      vm.$store.dispatch(storeNames.actions.FETCH_SUGGESTIONS, value)
+        .then(() => {
+          vm.$refs['search-suggestions'].collection = vm.get_suggestions;
+        })
+    }, 1000),
+    queryMatching(value) {
+      this.searchValue = value;
+      this.debouncedQueryMatch(value, this);
+    }
+  },
+  computed: {
+    ...mapGetters([
+      'get_suggestions'
+    ]),
+    shouldDisableSearch() {
+      return this.searchValue == null;
+    }  
+  }
+})
 </script>
 
 <style lang="scss">
@@ -50,6 +106,11 @@
 
 $body-bg:  #111C7B; // overwritten bootstrap variable
 /* Importing Bootstrap SCSS file. */
+
+input[type=date]::-webkit-calendar-picker-indicator {
+  color: #111C7B;
+  background-image: url('~@/assets/date_range_24px_outlined.png');
+}
 
 #sloganRight { 
   color: white;
@@ -77,17 +138,15 @@ $body-bg:  #111C7B; // overwritten bootstrap variable
   height:2.4rem;
   box-shadow: 0 0 10px;
   opacity:0.93;
-
+  z-index: 3;
+  position: relative;
 }
 #landing-where-image {width: 1.3em;
    height: 1.3em; 
    margin-left: 0.3em;
    margin-top: 0.54em;
 }
-#landing-where-input {border:none;
-  width:calc(100% - 2.8em);
-  font-family: 'Open-Sans-Italic';
-}
+
 #landing-from { 
   padding:0;
   box-shadow:0 0 10px;
@@ -103,8 +162,10 @@ $body-bg:  #111C7B; // overwritten bootstrap variable
 }
 #landing-date-from-input {border: none;
   padding-left:0.2em;
-  width:calc(100% - 2.4em);
-  float:left 
+  // width:calc(100% - 2.4em);
+  float:left;
+    text-align: center;
+  width: 100%
 }
 #landing-to { 
   padding:0;
@@ -121,9 +182,11 @@ $body-bg:  #111C7B; // overwritten bootstrap variable
 #landing-date-to-input { 
   border: none;
   padding-left:0.2em;
-  width:calc(100% - 2.4em);
+  // width:calc(100% - 2.4em);
   float:left;
   font-family: 'Open-Sans-Italic';
+  text-align: center;
+  width: 100%
 }
 
 #sub-wrapper {

@@ -45,7 +45,7 @@
 </div>
 </template>
 
-<script lang="ts">
+<script>
   import Vue, { defineComponent } from 'vue';
 
   export default defineComponent({
