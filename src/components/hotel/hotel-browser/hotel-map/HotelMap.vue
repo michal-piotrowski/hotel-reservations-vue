@@ -33,16 +33,6 @@ export default defineComponent({
       formFields,
       L,
       HrTool,
-      // greenIcon = L.icon({
-      //   iconUrl: 'leaf-green.png',
-      //   shadowUrl: 'leaf-shadow.png',
-
-      //   iconSize:     [38, 95], // size of the icon
-      //   shadowSize:   [50, 64], // size of the shadow
-      //   iconAnchor:   [22, 94], // point of the icon which will correspond to marker's location
-      //   shadowAnchor: [4, 62],  // the same for the shadow
-      //   popupAnchor:  [-3, -76] // point from which the popup should open relative to the iconAnchor
-      // });
     }
   },
   mounted() {
@@ -51,11 +41,12 @@ export default defineComponent({
     if (isEmpty(this.get_location_form_data) && isEmpty(this.get_location_form_data[formFields.SUGGESTION])) {
       this.map.setView([51.505, -0.09], 13);
     } else {
-      this.map.setView(this.get_location_form_data[formFields.SUGGESTION].lat, this.get_location_form_data[formFields.SUGGESTION].lon, 13);
+      this.map.setView([this.get_location_form_data[formFields.SUGGESTION].lat, this.get_location_form_data[formFields.SUGGESTION].lon], 13);
     }
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     }).addTo(this.map);
+    this.addMarkers;
   },
   created() {
         //start spinning the spinner IF THE STORE IS COMMITTING THE FETCH_SUGGESTIONS mutation

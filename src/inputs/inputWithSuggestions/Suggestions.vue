@@ -16,7 +16,6 @@
 </template>
  
 <script>
-import { VueAutosuggest } from 'vue-autosuggest';
 import {isEmpty} from 'lodash';
 
 
@@ -27,9 +26,6 @@ export default {
     mapperFunction: Function,
     selected: null,
     inputStyle: null,
-  },
-  components: {
-    VueAutosuggest
   },
   methods: {
     delayHideCollection() {
