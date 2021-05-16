@@ -53,17 +53,14 @@ export default defineComponent({
   height:2.4rem;
   box-shadow: 0 0 10px;
   opacity:0.93;
-z-index: 3;
+  z-index: 3;
 }
 #landing-where-image {width: 1.3em;
    height: 1.3em;
    margin-left: 0.3em;
    margin-top: 0.54em;
 }
-#landing-where-input {border:none;
-  width:calc(100% - 2.4em);
-  font-family: 'Open-Sans-Italic';
-}
+
 #landing-from { 
   padding:0;
   box-shadow:0 0 10px;

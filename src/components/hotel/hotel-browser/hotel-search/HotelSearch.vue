@@ -2,14 +2,21 @@
   <div>
     <div id="search-input-wrapper">
       <img id="search-icon" src="@/assets/map/magnif_glas.png" />
+      <div class="row">
       <label class="search-input-label" for="search-input">{{ $filters.translate("Searched:")}}</label>
-      <input v-model="searchText" type="text" id="search-input" />
+        <suggestions 
+          ref="search-suggestions"
+          :inputStyle="{border: 'none'}"
+          @location-selected="handleLocationSelected"
+          @input="queryMatching($event.target.value)"
+          :containerStyle="{ height: '3em', width: '84%', float: 'left', minWidth: '10em'}"
+          :placeholder="get_location_form_data[formFields.SUGGESTION] && get_location_form_data[formFields.SUGGESTION].display_name"/>
+        </div>
     </div>
     <div id="date-pickers-wrapper">
       <div id="date-from-wrapper">
         <img id="search-icon" src="@/assets/date_range_24px_outlined.png" />
-        <label class="search-input-label" for="search-input">{{ $filters.translate("Check-out")
-        }}</label>
+        <label class="search-input-label" for="search-input">{{ $filters.translate("Check-out") }}</label>
         <i id="chev-date-from-left" class="fa fa-chevron-left"></i>
         <input v-model="dateFrom" placeholder="dd-mm-yyyy" type="text" class="date-input" />
         <i id="chev-date-from-right" class="fa fa-chevron-right"></i>
@@ -22,22 +29,70 @@
         <i id="chev-date-to-right" class="fa fa-chevron-right"></i>
       </div>
     </div>
+    <div style="justify-content:center; display: flex; padding: 5px 50px 15px 50px;" class="cell" >
+      <button @click="handleSearch" :disabled="shouldDisableSearch" class="btn btn-primary" style="width:100%">Search</button>
+    </div>
   </div>
 </template>
 
 <script>
 import {defineComponent} from "vue";
+import { mapGetters } from "vuex";
+import Suggestions from "../../../../inputs/inputWithSuggestions/Suggestions.vue";
+import {debounce} from 'lodash';
+import {names as storeNames, formFields} from '@/store/store';
 
 
 export default defineComponent({
+  components: { Suggestions },
   created() {
     console.log(this);
   },
+  computed: {
+    ...mapGetters(
+      ['get_suggestions','get_location_form_data'],
+   ),
+    shouldDisableSearch() {
+      return !this.get_location_form_data || !this.get_location_form_data[formFields.SUGGESTION];
+    }  
+  },
   data() {
-    searchText,
-    dateFrom, 
-    dateTo
-  }
+    return {
+      searchText: null,
+      dateFrom: null, 
+      dateTo: null,
+      formFields
+    }
+  },
+  methods: {
+    
+    handleSearch() {
+      this.$store.dispatch(storeNames.actions.SEARCH_DESTINATIONS);
+    },
+    debouncedQueryMatch: debounce(function (value, vm) {
+      vm.$store.dispatch(storeNames.actions.FETCH_SUGGESTIONS, value)
+        .then(() => {
+          vm.$refs['search-suggestions'].collection = vm.get_suggestions;
+        })
+    }, 1000),
+    queryMatching(value) {
+      this.searchValue = value;
+      this.debouncedQueryMatch(value, this);
+    },
+    handleDateToSelected(event) {
+      this.$store.dispatch(storeNames.actions.MERGE_LOCATION_FORM_VALUE, {value: event.target.value, fieldName: formFields.DATE_TO} )
+    },
+    handleDateFromSelected(event) {
+      this.$store.dispatch(storeNames.actions.MERGE_LOCATION_FORM_VALUE, {value: event.target.value, fieldName: formFields.DATE_FROM} )
+    },
+    handleLocationSelected(suggestion) {
+      this.$store.dispatch(storeNames.actions.MERGE_LOCATION_FORM_VALUE, {value: suggestion, fieldName: formFields.SUGGESTION});
+      this.clearCollection();
+    },
+    clearCollection() {
+      this.$refs['search-suggestions'].collection = null;
+    },  
+  },
 });
 </script>
 

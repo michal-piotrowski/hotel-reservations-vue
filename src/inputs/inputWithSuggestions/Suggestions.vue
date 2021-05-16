@@ -1,6 +1,6 @@
 <template>
 <div :style="containerStyle">
-  <input ref="suggestions-input" @blur="delayHideCollection" @input="handleInput" id="landing-where-input" :placeholder="placeholder" style="position: relative;z-index: 2;" class="form-control">
+  <input ref="suggestions-input" @blur="delayHideCollection" @input="handleInput" id="landing-where-input" :placeholder="placeholder" :style="inputStyle" class="form-control">
   <div id="suggestion-list-wrapper">
     <ul v-if="!isEmpty(collection) && $refs['suggestions-input'].value && shouldShowCollection" ref="results" id="result-list">
       <li v-for="suggestion of collection" 
@@ -26,6 +26,7 @@ export default {
     placeholder:null,
     mapperFunction: Function,
     selected: null,
+    inputStyle: null,
   },
   components: {
     VueAutosuggest

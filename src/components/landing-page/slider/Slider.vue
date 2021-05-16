@@ -13,6 +13,7 @@
           <img id="landing-where-image" src="@/assets/locationIcoFilled_purp.png"/>
           <Suggestions 
             ref="search-suggestions"
+            :inputStyle="'position: relative;z-index: 2;'"
             @location-selected="handleLocationSelected"
             @input="queryMatching($event.target.value)"
             :containerStyle="{width: 'calc(100% - 2.8em)'}"
@@ -41,7 +42,7 @@
 
 <script>
 import {defineComponent} from 'vue';
-import { names as storeNames } from '@/store/store.js';
+import { names as storeNames, formFields } from '@/store/store.js';
 import { debounce } from 'lodash';
 import {  mapGetters } from 'vuex';
 import HrAxios, { URL } from '../../../http/HrAxios';
@@ -62,13 +63,13 @@ export default defineComponent({
   },
   methods: {
     handleDateToSelected(event) {
-      this.$store.dispatch(storeNames.actions.MERGE_LOCATION_FORM_VALUE, {value: event.target.value, fieldName: 'dateTo'} )
+      this.$store.dispatch(storeNames.actions.MERGE_LOCATION_FORM_VALUE, {value: event.target.value, fieldName: formFields.DATE_TO} )
     },
     handleDateFromSelected(event) {
-      this.$store.dispatch(storeNames.actions.MERGE_LOCATION_FORM_VALUE, {value: event.target.value, fieldName: 'dateFrom'} )
+      this.$store.dispatch(storeNames.actions.MERGE_LOCATION_FORM_VALUE, {value: event.target.value, fieldName: formFields.DATE_FROM} )
     },
     handleLocationSelected(suggestion) {
-      this.$store.dispatch(storeNames.actions.MERGE_LOCATION_FORM_VALUE, {value: suggestion, fieldName: 'suggestion'});
+      this.$store.dispatch(storeNames.actions.MERGE_LOCATION_FORM_VALUE, {value: suggestion, fieldName: formFields.SUGGESTION});
       this.clearCollection();
     },
     clearCollection() {
@@ -80,7 +81,7 @@ export default defineComponent({
     },
     debouncedQueryMatch: debounce(function (value, vm) {
       vm.$store.dispatch(storeNames.actions.FETCH_SUGGESTIONS, value)
-        .then(() => {
+        .then(response => {``
           vm.$refs['search-suggestions'].collection = vm.get_suggestions;
         })
     }, 1000),
@@ -91,10 +92,11 @@ export default defineComponent({
   },
   computed: {
     ...mapGetters([
-      'get_suggestions'
+      'get_suggestions',
+      'get_location_form_data'
     ]),
     shouldDisableSearch() {
-      return this.searchValue == null;
+      return !this.get_location_form_data || !this.get_location_form_data[formFields.SUGGESTION];
     }  
   }
 })
