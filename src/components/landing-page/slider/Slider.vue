@@ -7,7 +7,7 @@
     <div class="col-md-4 midpageComponent" id="formMiddle">
       <div class="container" id="form-container">
         <div id="textBanner" class="row ">
-          <p>Looking for a hotel?</p>
+          <p id="text-mid">Looking for a hotel?</p>
         </div>
         <div class="row" id="landing-where">
           <img id="landing-where-image" src="@/assets/locationIcoFilled_purp.png"/>
@@ -17,6 +17,7 @@
             @location-selected="handleLocationSelected"
             @input="queryMatching($event.target.value)"
             :containerStyle="{width: 'calc(100% - 2.8em)'}"
+            :collection="collection"
             :placeholder="'Your searched location'"/>
         </div>
         <div class="row">
@@ -42,10 +43,9 @@
 
 <script>
 import {defineComponent} from 'vue';
+import {  mapGetters } from 'vuex';
 import { names as storeNames, formFields } from '@/store/store.js';
 import { debounce } from 'lodash';
-import {  mapGetters } from 'vuex';
-import HrAxios, { URL } from '../../../http/HrAxios';
 import Suggestions from '../../../inputs/inputWithSuggestions/Suggestions.vue';
 import {eventNames} from '@/store/eventNames.js';
 import { names as routerNames } from '@/router';
@@ -57,8 +57,8 @@ export default defineComponent({
   },
   data() {
     return {
-      eventNames,
-      searchValue: null
+      searchValue: null,
+      collection: null
     }
   },
   methods: {
@@ -73,7 +73,8 @@ export default defineComponent({
       this.clearCollection();
     },
     clearCollection() {
-      this.$refs['search-suggestions'].collection = null;
+      this.collection = null;
+      // this.$refs['search-suggestions'].collection = null;
     },  
     searchHotels() {
       this.$router.push(routerNames.RESULTS);
@@ -81,8 +82,8 @@ export default defineComponent({
     },
     debouncedQueryMatch: debounce(function (value, vm) {
       vm.$store.dispatch(storeNames.actions.FETCH_SUGGESTIONS, value)
-        .then(response => {``
-          vm.$refs['search-suggestions'].collection = vm.get_suggestions;
+        .then(response => {
+          this.collection = vm.get_suggestions;
         })
     }, 1000),
     queryMatching(value) {
@@ -112,6 +113,10 @@ $body-bg:  #111C7B; // overwritten bootstrap variable
 input[type=date]::-webkit-calendar-picker-indicator {
   color: #111C7B;
   background-image: url('~@/assets/date_range_24px_outlined.png');
+}
+
+#text-mid {
+  margin: 0;
 }
 
 #sloganRight { 

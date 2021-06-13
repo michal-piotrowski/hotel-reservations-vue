@@ -18,7 +18,7 @@ export const names = {
 const routes = [
   { name: names.ROOT,  path: '/', component: Slider},
   { name: names.RESULTS_ID,  path: '/results/:id', component: Booking},
-  { name: names.RESULTS,  path: '/results', component: HotelMap},
+  { name: names.RESULTS,  path: '/results', component: HotelMap, children: []},
   { name: names.LOGIN,  path: '/login', component: Login},
   { name: names.PROFILE,  path: '/profile', component: Profile},
   { name: names.TOS,  path: '/tos', component: Tos },

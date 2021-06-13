@@ -8,7 +8,8 @@
 <script>
 import Vue, { defineComponent } from 'vue';
 import {mapGetters} from 'vuex';
-import HotelSummary from './HotelSummary.vue';
+import HotelSummary from '../hotel/HotelSummary.vue';
+import {isEmpty} from 'lodash';
 
 export default defineComponent({
   components: { HotelSummary },
@@ -23,6 +24,14 @@ export default defineComponent({
     }),
     isCommitting() {
       return this.$store._committing;
+    }
+  },
+  watch: {
+    get_fetched_destinations(val) {
+      if (!isEmpty(val)) {
+        this.$SmoothScroll(document.querySelector('#leaflet-map'))
+         
+      }
     }
   }
 })

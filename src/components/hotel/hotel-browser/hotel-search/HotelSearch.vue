@@ -10,6 +10,7 @@
           @location-selected="handleLocationSelected"
           @input="queryMatching($event.target.value)"
           :containerStyle="{ height: '3em', width: '84%', float: 'left', minWidth: '10em'}"
+          :collection="collection"
           :placeholder="get_location_form_data[formFields.SUGGESTION] && get_location_form_data[formFields.SUGGESTION].display_name"/>
         </div>
     </div>
@@ -56,12 +57,17 @@ export default defineComponent({
       return !this.get_location_form_data || !this.get_location_form_data[formFields.SUGGESTION];
     }  
   },
+  mounted() {
+    this.dateFrom = this.get_location_form_data[formFields.DATE_FROM];
+    this.dateTo = this.get_location_form_data[formFields.DATE_TO];
+  },
   data() {
     return {
       searchText: null,
       dateFrom: null, 
       dateTo: null,
-      formFields
+      formFields,
+      collection: null,
     }
   },
   methods: {
@@ -72,7 +78,7 @@ export default defineComponent({
     debouncedQueryMatch: debounce(function (value, vm) {
       vm.$store.dispatch(storeNames.actions.FETCH_SUGGESTIONS, value)
         .then(() => {
-          vm.$refs['search-suggestions'].collection = vm.get_suggestions;
+          this.collection = vm.get_suggestions;
         })
     }, 1000),
     queryMatching(value) {
@@ -90,10 +96,10 @@ export default defineComponent({
       this.clearCollection();
     },
     clearCollection() {
-      this.$refs['search-suggestions'].collection = null;
+      this.collection = null;
     },  
   },
-});
+}); 
 </script>
 
 <style scoped>

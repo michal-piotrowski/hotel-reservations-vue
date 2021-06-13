@@ -41,6 +41,7 @@ export default defineComponent({
     if (isEmpty(this.get_location_form_data) && isEmpty(this.get_location_form_data[formFields.SUGGESTION])) {
       this.map.setView([51.505, -0.09], 13);
     } else {
+      document.querySelector('#leaflet-map').scrollIntoView();
       this.map.setView([this.get_location_form_data[formFields.SUGGESTION].lat, this.get_location_form_data[formFields.SUGGESTION].lon], 13);
     }
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {

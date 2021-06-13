@@ -1,8 +1,6 @@
 import haversineDistance from "haversine-distance";
 import formatcoords from 'formatcoords';
 
-const HD = haversineDistance;
-
 export default {
   translate(text) {
     return text;

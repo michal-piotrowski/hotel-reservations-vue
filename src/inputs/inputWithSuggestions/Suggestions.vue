@@ -1,6 +1,6 @@
 <template>
 <div :style="containerStyle">
-  <input ref="suggestions-input" @blur="delayHideCollection" @input="handleInput" id="landing-where-input" :placeholder="placeholder" :style="inputStyle" class="form-control">
+  <input ref="suggestions-input" @blur="delayHideCollection" @input="handleInput" id="landing-where-input" :placeholder="placeholder" :style="inputStyle" class="form-control" autocomplete="off">
   <div id="suggestion-list-wrapper">
     <ul v-if="!isEmpty(collection) && $refs['suggestions-input'].value && shouldShowCollection" ref="results" id="result-list">
       <li v-for="suggestion of collection" 
@@ -9,7 +9,7 @@
         :title="getDisplayName(suggestion)"  
         :key="'_' + suggestion.id">
         {{getDisplayName(suggestion)}}
-      </li>
+    </li>
     </ul>
   </div>
 </div>
@@ -26,6 +26,7 @@ export default {
     mapperFunction: Function,
     selected: null,
     inputStyle: null,
+    collection: null
   },
   methods: {
     delayHideCollection() {
@@ -61,7 +62,7 @@ export default {
     return{
       shouldShowCollection: true,
       isEmpty,
-      collection: [],
+      // collection: [],
       highlightPosition: 0
     }
   }
