@@ -29,7 +29,7 @@ export default defineComponent({
   watch: {
     get_fetched_destinations(val) {
       if (!isEmpty(val)) {
-        this.$SmoothScroll(document.querySelector('#leaflet-map'))
+        document.querySelector('#leaflet-map').scrollIntoView();
          
       }
     }

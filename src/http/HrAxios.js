@@ -48,11 +48,11 @@ Axios.interceptors.request.use(config => {
  */
 export default {
   httpGet(url) {
-    if (url.includes(URL.rapSearchDestinations)) {
-      return new Promise((resolve) => {
-        resolve(locations_search_rouen);
-      });
-    }
+    // if (url.includes(URL.rapSearchDestinations)) {
+    //   return new Promise((resolve) => {
+    //     resolve(locations_search_rouen);
+    //   });
+    // }
     return Axios.get(url);
   },
 

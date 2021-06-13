@@ -54,7 +54,9 @@ export default defineComponent({
   },
   methods: {
     addMarker(lat, lon) {
-      L.marker([lat, lon], {icon: HrTool.getDefaultMarker()}).addTo(this.layerGroup);
+      if (lat && lon) {
+        L.marker([lat, lon], {icon: HrTool.getDefaultMarker()}).addTo(this.layerGroup);
+      }
     }
   },
   computed: {
