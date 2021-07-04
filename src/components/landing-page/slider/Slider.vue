@@ -12,12 +12,12 @@
         <div class="row" id="landing-where">
           <img id="landing-where-image" src="@/assets/locationIcoFilled_purp.png"/>
           <Suggestions 
+            :collection="collection"
+            @location-selected="handleLocationSelected"
             ref="search-suggestions"
             :inputStyle="'position: relative;z-index: 2;'"
-            @location-selected="handleLocationSelected"
             @input="queryMatching($event.target.value)"
             :containerStyle="{width: 'calc(100% - 2.8em)'}"
-            :collection="collection"
             :placeholder="'Your searched location'"/>
         </div>
         <div class="row">

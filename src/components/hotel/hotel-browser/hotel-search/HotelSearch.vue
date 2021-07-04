@@ -73,6 +73,7 @@ export default defineComponent({
   methods: {
     
     handleSearch() {
+      document.querySelector('#leaflet-map').scrollIntoView();
       this.$store.dispatch(storeNames.actions.SEARCH_DESTINATIONS);
     },
     debouncedQueryMatch: debounce(function (value, vm) {

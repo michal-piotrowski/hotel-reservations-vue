@@ -1,11 +1,11 @@
 <template>
 <div class="component-wrapper">
   <div class="component-container container">
-    <HotelSearch ref="hotel-search"></HotelSearch>
+    <HotelSearch></HotelSearch>
     <div id="leaflet-wrapper">
       <div id="leaflet-map"></div>
     </div>
-    <HotelList ref="hotel-list"></HotelList>
+    <HotelList></HotelList>
   </div>
 </div>
 </template>
@@ -66,7 +66,8 @@ export default defineComponent({
     ]),
     addMarkers() {
       for (let location of this.get_fetched_destinations) {
-        this.addMarker(location.latitude, location.longitude);
+        if (location.longitude && location.latitude)
+          this.addMarker(location.latitude, location.longitude);
       }
     },
 

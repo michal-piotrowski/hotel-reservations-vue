@@ -11,6 +11,7 @@ export const names = {
     SEARCH_DESTINATIONS: 'searchDestinations',
     FETCH_SUGGESTIONS: 'fetchSuggestions',
     SET_SELECTED_HOTEL_INDEX: 'setSelectedHotelIndex',
+    SET_FETCHING_STATE: 'setFetchingState',
   },
   actions: {
     FETCH_SUGGESTIONS: 'fetchSuggestions',
@@ -36,12 +37,9 @@ export const storeOptions = {
     };
   },
   getters: {
-    get_suggestions: state => {
-      return state.suggestions
-    },
-    get_fetched_destinations: state => {
-      return state.fetchedDestinations
-    },
+    fetching_state: state => {return state.fetchingState},
+    get_suggestions: state => { return state.suggestions},
+    get_fetched_destinations: state => { return state.fetchedDestinations},
     get_fetched_destination: state => arrayIndex => { return state.fetchedDestinations[arrayIndex] },
     get_location_form_data: state => { return state.locationFormData },
     get_currently_selected_hotel_index: state => {
@@ -59,14 +57,24 @@ export const storeOptions = {
           commit(names.mutations.PUT_SUGGESTIONS,  response.data.map(el => { return { id: el.place_id, display_name: el.display_name, lat: el.lat, lon: el.lon } }));
         }
       })
-      
     },
     mergeLocationFormValue({ commit, state }, { value, fieldName }) {
       commit(names.mutations.PUT_LOCATION_FORM_DATA, { value: value, fieldName: fieldName });
     },
     searchDestinations({ commit, state }) {
       const parsedSuggestion = parseSuggestion(state.locationFormData[formFields.SUGGESTION].display_name);
-      commit(names.mutations.SEARCH_DESTINATIONS, parsedSuggestion);
+      commit(names.mutations.SET_FETCHING_STATE, 'fetching');
+      return HrAxios.httpGet(URL.rapSearchDestinations + '?query=' + parsedSuggestion)
+        .then(response => {
+          commit(names.mutations.SET_FETCHING_STATE, 'done');
+          if (response.data.suggestions[1].entities.length == 0) {
+            state.fetchedDestinations = [{ id: -1, caption: 'No results found' }]
+          } else {
+            state.fetchedDestinations = response.data.suggestions[1].entities;
+          }
+        }).catch(() => {
+          commit(names.mutations.SET_FETCHING_STATE, 'done');
+        });
     }
   },
 
@@ -77,18 +85,8 @@ export const storeOptions = {
     putLocationFormData(state, { value, fieldName }) {
       state.locationFormData[fieldName] = value
     },
-    searchDestinations(state, parsedSuggestion) {
-      return HrAxios.httpGet(URL.rapSearchDestinations + '?query=' + parsedSuggestion)
-        .then(response => {
-          if (response.data.suggestions[1].entities.length == 0) {
-            state.fetchedDestinations = [{ id: -1, caption: 'No results found' }]
-          } else {
-            state.fetchedDestinations = response.data.suggestions[1].entities;
-          }
-        });
-    },
-    fetchSuggestions(state, searchString) {
-
+    setFetchingState(state, fetchingState) {
+      state.fetchingState = fetchingState;
     },
     setSelectedHotelIndex(state, index) {
       state.currently_selected_hotel_index = index

@@ -20,7 +20,7 @@
       <hr v-if="expanded"/>
       <div v-if="expanded" id="book-btn-wrapper">
         <button id="book-now-btn" class="btn btn-primary">Book now</button>
-        <button id="book-details-btn" class="btn btn-secondary">Show details</button>
+        <button @click="goToDetails(arrayPos)" id="book-details-btn" class="btn btn-secondary">Show details</button>
       </div>
     </div>
   </div>
@@ -30,14 +30,22 @@
 import {mapGetters} from 'vuex';
 import HrTool from '@/helpers/HrTool.js';
 import {formFields, names as storeNames} from '@/store/store.js';
+import {names as routerNames} from '@/router';
 
 export default {
   props: {
     arrayPos: null,
     hotelSummary: null,
   },
+  methods: {
+    goToDetails(arrayPos) {
+      this.$router.push('/results/' + arrayPos);
+
+    }
+  },  
   data() {
     return {
+      routerNames,
       HrTool,
       formFields,
       storeNames,

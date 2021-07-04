@@ -9,7 +9,7 @@
         :title="getDisplayName(suggestion)"  
         :key="'_' + suggestion.id">
         {{getDisplayName(suggestion)}}
-    </li>
+      </li>
     </ul>
   </div>
 </div>
@@ -21,12 +21,12 @@ import {isEmpty} from 'lodash';
 
 export default {
   props: {
+    collection: null,
     containerStyle: null,
     placeholder:null,
     mapperFunction: Function,
     selected: null,
     inputStyle: null,
-    collection: null
   },
   methods: {
     delayHideCollection() {

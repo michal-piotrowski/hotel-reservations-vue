@@ -1,6 +1,9 @@
 <template>
   <div id="hotel-list-wrapper">
-    <i v-if="isCommitting" class="fa fa-spinner fa-pulse"></i>
+    <div v-if="isFetching" style="text-align: center; color: gray" >
+      <fa icon="spinner" spin="true" size="2x"></fa>
+    </div>
+
     <hotel-summary v-else v-for="(hotelSummary, ind) of get_fetched_destinations" :hotelSummary="hotelSummary" :arrayPos="ind" :key="ind"/>
   </div>
 </template>
@@ -10,24 +13,25 @@ import Vue, { defineComponent } from 'vue';
 import {mapGetters} from 'vuex';
 import HotelSummary from '../hotel/HotelSummary.vue';
 import {isEmpty} from 'lodash';
+import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome';
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 
 export default defineComponent({
-  components: { HotelSummary },
-  mounted() {
-    if (this.$store._committing) {
-
-    };
-  },
+  components: { HotelSummary, FontAwesomeIcon },
+  data() {
+    faSpinner
+  },  
   computed: {
     ...mapGetters({
       get_fetched_destinations: 'get_fetched_destinations',
+      fetching_state: 'fetching_state'
     }),
-    isCommitting() {
-      return this.$store._committing;
+    isFetching() {
+      return this.fetching_state == 'fetching';
     }
   },
   watch: {
-    get_fetched_destinations(val) {
+    fetching_state(val) {
       if (!isEmpty(val)) {
         document.querySelector('#leaflet-map').scrollIntoView();
          
